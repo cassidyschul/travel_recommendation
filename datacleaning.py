@@ -48,6 +48,7 @@ worldwide_travel_cities_df["region"] = worldwide_travel_cities_df["region"].repl
 # change ideal durations to list datatype
 worldwide_travel_cities_df["ideal_durations"] = worldwide_travel_cities_df["ideal_durations"].apply(ast.literal_eval)
 
+# change avg_temp_monthly to dictionary datatype
 worldwide_travel_cities_df['avg_temp_monthly'] = worldwide_travel_cities_df["avg_temp_monthly"].apply(json.loads)
 
 ################## travel details ##################
@@ -63,12 +64,12 @@ travel_details_df[["Accommodation cost", "Transportation cost"]] = travel_detail
 )
 
 # split destination by city and country and clean
-travel_details_df[["City", "Country"]] = travel_details_df["Destination"].str.split(",", n=1, expand = True)
+travel_details_df[["City", "Country"]] = travel_details_df["Destination"].str.split(",", expand = True)
 travel_details_df[["City", "Country"]] = travel_details_df[["City", "Country"]].apply(
     lambda x: x.str.strip()
 )
 travel_details_df["Country"] = travel_details_df["Country"].replace({"UK": "United Kingdom", "USA": "United States", "SA": "South Africa", "Hawaii" : "United States"})
-travel_details_df["City"] = travel_details_df["City"].replace({"New York City": "New York", "Hawaii" : "Honolulu", "Bali" : "Denpasar", "Cancun" : "Cancún"})
+travel_details_df["City"] = travel_details_df["City"].replace({"New York City": "New York", "Hawaii" : "Honolulu", "Bali" : "Denpasar"})
 
 # handle records that only have country or city as destinated
 countries = set(city_country_df["country"].str.strip().str.lower())
@@ -93,9 +94,9 @@ travel_details_df[["Start date", "End date"]] = travel_details_df[["Start date",
 
 # merge with city_country_df to get lat, lng and country
 merged_travel_details_df = travel_details_df.merge(
-    city_country_df[["city", "country", "lat", "lng"]],
+    city_country_df[["city_ascii", "country", "lat", "lng"]],
     left_on = "City",
-    right_on = "city",
+    right_on = "city_ascii",
     how = "left"
     )
 
@@ -117,6 +118,30 @@ merged_travel_details_df["Country"] = merged_travel_details_df["Country"].fillna
 
 
 # drop trip ID and destination
-merged_travel_details_df = merged_travel_details_df.drop(columns=["Trip ID", "Destination", "Traveler name", "country", "city"])
+merged_travel_details_df = merged_travel_details_df.drop(columns=["Trip ID", "Destination", "Traveler name", "country", "city_ascii"])
 
-print(merged_travel_details_df.head())
+################## travel destinations ##################
+
+travel_destinations_df = pd.read_csv("Raw Data/travel_destinations.csv")
+
+# remove parenthesis on best time to travel
+travel_destinations_df["Best_Time_to_Travel"] = travel_destinations_df["Best_Time_to_Travel"].str.split("(").str[0].str.strip()
+
+# change Category and best time to travel to lists
+travel_destinations_df["Category"] = travel_destinations_df["Category"].apply(lambda x: [x])
+travel_destinations_df["Best_Time_to_Travel"] = travel_destinations_df["Best_Time_to_Travel"].apply(lambda x: [x])
+
+# rename cities and countries
+travel_destinations_df["Country"] = travel_destinations_df["Country"].replace({"USA": "United States"})
+travel_destinations_df["City"] = travel_destinations_df["City"].replace({"New York City": "New York", "Bali (Denpasar/Ubud)": "Denpasar", "Bogotá": "Bogota", "Medellín": "Medellin"})
+travel_destinations_df.loc[travel_destinations_df["City"] == "Hong Kong", "Country"] = "Hong Kong"
+
+# merge with city country to get lat & lng
+merged_travel_destinations_df = travel_destinations_df.merge(
+    city_country_df[["city_ascii", "country", "lat", "lng"]],
+    left_on = ["City", "Country"],
+    right_on = ["city_ascii", "country"],
+    how = "left"
+    )
+
+
