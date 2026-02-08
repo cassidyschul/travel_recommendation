@@ -144,4 +144,47 @@ merged_travel_destinations_df = travel_destinations_df.merge(
     how = "left"
     )
 
+#drop unwanted columns
+merged_travel_destinations_df = merged_travel_destinations_df.drop(columns=["city_ascii", "country"])
 
+################## famous places ##################
+
+famous_places_df = pd.read_csv("Raw Data/famous_places.csv")
+
+#rename cities
+famous_places_df["City"] = famous_places_df["City"].replace({"New York City": "New York", "Cusco Region": "Cusco", "Arizona": "Flagstaff", "Beijing/Multiple": "Beijing"})
+
+#rename months to match other dataset months
+famous_places_df["Best_Visit_Month"] = famous_places_df["Best_Visit_Month"].replace({"March": "Mar", "June": "Jun", "July": "Jul", "Sept": "Sep"}, regex=True) #regex = True to change portions of string
+
+# convert months into a list
+months = ["Jan","Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec"]
+
+def updated_best_time(best_time):
+    months_list = []
+    for x in best_time.split("/"): # split by / 
+        first_month, last_month = x.split("-") # split by -
+        first_index = months.index(first_month)
+        last_index = months.index(last_month)
+
+        # add each month the months_list based on index, handle ranges that occur in two separate years (Oct-March)
+        if first_index <= last_index:
+            months_list.extend(months[first_index:last_index+1])
+        else:
+            months_list.extend(months[first_index:] + months[:last_index+1])
+    return months_list
+
+famous_places_df["Best_Visit_Month"] = famous_places_df["Best_Visit_Month"].apply(updated_best_time)
+
+#merge with city_country to get lat and lng of records
+merged_famous_places_df = famous_places_df.merge(
+    city_country_df[["city_ascii", "country", "lat", "lng"]],
+    left_on = ["City", "Country"],
+    right_on = ["city_ascii", "country"],
+    how = "left"
+)
+
+#drop unwanted columns
+merged_famous_places_df = merged_famous_places_df.drop(columns=["Annual_Visitors_Millions", "UNESCO_World_Heritage", "Year_Built", "Tourism_Revenue_Million_USD", "Average_Visit_Duration_Hours", "city_ascii", "country"])
+
+print(merged_famous_places_df.head(15))
