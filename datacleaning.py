@@ -3,6 +3,7 @@ import pandas as pd
 import ast
 from datetime import date
 import json
+import os
 
 ################## world cities (csv of cities and country with lat and lng ##################
 
@@ -162,6 +163,11 @@ months = ["Jan","Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","De
 
 def updated_best_time(best_time):
     months_list = []
+
+    # convert input to a string, if currently a list (euro_destinations best month)
+    if isinstance(best_time, list):
+        best_time = "/".join(best_time)
+
     for x in best_time.split("/"): # split by / 
         first_month, last_month = x.split("-") # split by -
         first_index = months.index(first_month)
@@ -173,6 +179,7 @@ def updated_best_time(best_time):
         else:
             months_list.extend(months[first_index:] + months[:last_index+1])
     return months_list
+
 
 famous_places_df["Best_Visit_Month"] = famous_places_df["Best_Visit_Month"].apply(updated_best_time)
 
@@ -187,4 +194,24 @@ merged_famous_places_df = famous_places_df.merge(
 #drop unwanted columns
 merged_famous_places_df = merged_famous_places_df.drop(columns=["Annual_Visitors_Millions", "UNESCO_World_Heritage", "Year_Built", "Tourism_Revenue_Million_USD", "Average_Visit_Duration_Hours", "city_ascii", "country"])
 
-print(merged_famous_places_df.head(15))
+
+################## european destinations ##################
+
+euro_destination_df = pd.read_csv("Raw Data/destinations.csv")
+
+# replace year round with all months
+euro_destination_df["Best Time to Visit"] = euro_destination_df["Best Time to Visit"].replace({"Year-round" : "(Jan-Dec)", "March" : "Mar", "April" : "Apr", "June" : "Jun", "August" : "Aug", "September" : "Sep", "Sept": "Sep", "December" : "Dec"}, regex=True)
+
+# extract month
+euro_destination_df["Best_Month"] = euro_destination_df["Best Time to Visit"].str.findall(r"\((.*?)\)")
+euro_destination_df["Best_Month"] = euro_destination_df["Best_Month"].apply(updated_best_time)
+
+#extract season
+euro_destination_df["Best_Season"] = euro_destination_df["Best Time to Visit"].str.findall(r"(Winter|Spring|Summer|Fall)")
+
+#drop unwanted columns
+euro_destination_df = euro_destination_df.drop(columns=["Region", "Best Time to Visit", "Currency", "Majority Religion", "Approximate Annual Tourists", "Language", "Cost of Living", "Safety"])
+
+
+
+
