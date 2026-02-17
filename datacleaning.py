@@ -14,22 +14,21 @@ city_country_df = pd.read_csv("Raw Data/worldcities.csv")
 
 europe_hotel_reviews_df = pd.read_csv("Raw Data/europe_hotel_reviews.csv")
 
-# change review date to date datatype
-europe_hotel_reviews_df["Review_Date"] = pd.to_datetime(europe_hotel_reviews_df["Review_Date"], format="%m/%d/%y")
+
 
 # convert tags to list datatype & clean whitespaces
 europe_hotel_reviews_df["Tags"] = europe_hotel_reviews_df["Tags"].apply(ast.literal_eval)
 europe_hotel_reviews_df["Tags"] = europe_hotel_reviews_df["Tags"].apply(lambda tags: [t.strip().lower() for t in tags])
 
 #drop unwanted columns
-europe_hotel_reviews_df = europe_hotel_reviews_df.drop(columns=["Additional_Number_of_Scoring", "Total_Number_of_Reviews_Reviewer_Has_Given"])
+europe_hotel_reviews_df = europe_hotel_reviews_df.drop(columns=["Reviewer_Score", "Negative_Review", "Additional_Number_of_Scoring", "Total_Number_of_Reviews_Reviewer_Has_Given", "days_since_review", "Review_Total_Positive_Word_Counts", "Total_Number_of_Reviews", "Reviewer_Nationality", "Review_Total_Negative_Word_Counts", "Review_Date"])
 
 #strip white space in str columns 
 europe_hotel_reviews_df = europe_hotel_reviews_df.apply(lambda x: x.str.strip() if x.dtype == "string" else x)
-europe_hotel_reviews_df["days_since_review"] = europe_hotel_reviews_df["days_since_review"].str.rstrip(" days").astype(int)
 
 # break address in address, city and country
-europe_hotel_reviews_df[["Hotel_Address", "Hotel_City", "Hotel_Country"]] = europe_hotel_reviews_df["Hotel_Address"].str.rsplit(" ", n=2, expand = True)
+europe_hotel_reviews_df[["Hotel_Address", "City", "Country"]] = europe_hotel_reviews_df["Hotel_Address"].str.rsplit(" ", n=2, expand = True)
+
 
 # to csv
 europe_hotel_reviews_df.to_csv("Cleaned Data/clean_europe_hotel_reviews")
@@ -43,7 +42,7 @@ worldwide_travel_cities_df = pd.read_csv("Raw Data/Worldwide Travel Cities Datas
 worldwide_travel_cities_df = worldwide_travel_cities_df.drop(columns=['id'])
 
 # change column names
-worldwide_travel_cities_df = worldwide_travel_cities_df.rename(columns={"latitude" : "lat", "longitude": "lng"})
+worldwide_travel_cities_df = worldwide_travel_cities_df.rename(columns={"latitude" : "lat", "longitude": "lng", "city": "City", "country": "Country"})
 
 # replace values
 worldwide_travel_cities_df["region"] = worldwide_travel_cities_df["region"].replace({"north_america": "north america", "south_america": "south america"})
@@ -124,7 +123,7 @@ merged_travel_details_df["Country"] = merged_travel_details_df["Country"].fillna
 
 
 # drop trip ID and destination
-merged_travel_details_df = merged_travel_details_df.drop(columns=["Trip ID", "Destination", "Traveler name", "country", "city_ascii"])
+merged_travel_details_df = merged_travel_details_df.drop(columns=["Trip ID", "Destination", "Traveler name", "country", "city_ascii", "Traveler nationality", "Traveler gender", "Traveler age", "Start date", "End date"])
 
 # to csv
 merged_travel_details_df.to_csv("Cleaned Data/clean_travel_details")
@@ -210,7 +209,7 @@ merged_famous_places_df.to_csv("Cleaned Data/clean_famous_places")
 
 ################## european destinations ##################
 
-euro_destination_df = pd.read_csv("Raw Data/destinations.csv")
+euro_destination_df = pd.read_csv("Raw Data/euro_destinations.csv")
 
 # replace year round with all months
 euro_destination_df["Best Time to Visit"] = euro_destination_df["Best Time to Visit"].replace({"Year-round" : "(Jan-Dec)", "March" : "Mar", "April" : "Apr", "June" : "Jun", "August" : "Aug", "September" : "Sep", "Sept": "Sep", "December" : "Dec"}, regex=True)
@@ -224,6 +223,8 @@ euro_destination_df["Best_Season"] = euro_destination_df["Best Time to Visit"].s
 
 #drop unwanted columns
 euro_destination_df = euro_destination_df.drop(columns=["Region", "Best Time to Visit", "Currency", "Majority Religion", "Approximate Annual Tourists", "Language", "Cost of Living", "Safety"])
+
+euro_destination_df = euro_destination_df.rename(columns={"Destination" : "City"})
 
 # to csv
 euro_destination_df.to_csv("Cleaned Data/clean_euro_destinations")
