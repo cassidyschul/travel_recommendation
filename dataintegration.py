@@ -28,11 +28,11 @@ agg_famousplaces_df = famous_places_df.groupby(['City', 'Country']).agg({'Entry_
 agg_famousplaces_df.rename(columns={'Entry_Fee_USD' : 'avg_attraction_fee', 'Place_Name' : 'num_attractions'}, inplace=True)
 
 agg_traveldetails_df = travel_details_df.groupby(['City', 'Country']).agg({'Duration (days)': 'mean', 'Accommodation cost': 'mean', 'Transportation cost': 'mean'}).reset_index()
-agg_traveldetails_df.rename(columns={'Duration (days)': 'avg_trip_duration', 'Accommodation cost': 'avg_accommodation_cost', 'Transportation cost': 'avg_transport_cost'})
+agg_traveldetails_df.rename(columns={'Duration (days)': 'avg_trip_duration', 'Accommodation cost': 'avg_accommodation_cost', 'Transportation cost': 'avg_transport_cost'}, inplace=True)
 
 agg_traveldest_df = travel_destinations_df.drop_duplicates(subset=['City', 'Country'], keep='first')
 
-# merge all datasets together
+################# merge all datasets together
 
 # add worldwide travel cities df 
 merged_df = worldwide_travel_cities_df.copy()
@@ -53,8 +53,10 @@ merged_df = merged_df.merge(euro_destinations_df, on=["City", "Country"], how="l
 # drop columns
 merged_df = merged_df.drop(columns=['Category_y', 'Best_Month'])
 
-print(merged_df.head())
+# drop duplicates in merged_df
+merged_df = merged_df.drop_duplicates(subset={'City', 'Country'}, keep='first')
 
+print(merged_df.head())
 
 merged_df.to_csv("Cleaned Data/merged_data.csv")
 
