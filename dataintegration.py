@@ -58,6 +58,7 @@ merged_df = merged_df.drop_duplicates(subset={'City', 'Country'}, keep='first')
 
 print(merged_df.head())
 
+
 merged_df.to_csv("Cleaned Data/merged_data.csv")
 
 

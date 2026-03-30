@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import pickle
 
 
 print("Starting feature preparation...")
@@ -30,14 +29,17 @@ for col in X.columns:
     min_val = X[col].min()
     max_val = X[col].max()
     if max_val != min_val:
-        X[col] = (X[col] - min_val / (max_val - min_val))
+        X[col] = (X[col] - min_val) / (max_val - min_val)
 
 # one-hot encode region features
-region_dummies = pd.get_dummies(merged_df['region'], prefix = 'region')
+region_dummies = pd.get_dummies(merged_df['region'], prefix = 'region', dtype=np.float32)
 X = pd.concat([X, region_dummies], axis=1)
 print(f" Add {len(region_dummies.columns)} region features")
 
-# save features and destinations
+print(X.head())
+
+# save features, feature names, and destinations
 np.save('X_features.npy', X.values)
+np.save('feature_columns.npy', X.columns.to_list)
 destinations = merged_df[['City', 'Country', 'lat', 'lng']]
 destinations.to_csv('destinations.csv', index = False)
