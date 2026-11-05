@@ -10,29 +10,6 @@ import os
 city_country_df = pd.read_csv("Raw Data/worldcities.csv")
 
 
-################## europe hotel reviews ##################
-
-europe_hotel_reviews_df = pd.read_csv("Raw Data/europe_hotel_reviews.csv")
-
-
-
-# convert tags to list datatype & clean whitespaces
-europe_hotel_reviews_df["Tags"] = europe_hotel_reviews_df["Tags"].apply(ast.literal_eval)
-europe_hotel_reviews_df["Tags"] = europe_hotel_reviews_df["Tags"].apply(lambda tags: [t.strip().lower() for t in tags])
-
-#drop unwanted columns
-europe_hotel_reviews_df = europe_hotel_reviews_df.drop(columns=["Reviewer_Score", "Negative_Review", "Additional_Number_of_Scoring", "Total_Number_of_Reviews_Reviewer_Has_Given", "days_since_review", "Review_Total_Positive_Word_Counts", "Total_Number_of_Reviews", "Reviewer_Nationality", "Review_Total_Negative_Word_Counts", "Review_Date"])
-
-#strip white space in str columns 
-europe_hotel_reviews_df = europe_hotel_reviews_df.apply(lambda x: x.str.strip() if x.dtype == "string" else x)
-
-# break address in address, city and country
-europe_hotel_reviews_df[["Hotel_Address", "City", "Country"]] = europe_hotel_reviews_df["Hotel_Address"].str.rsplit(" ", n=2, expand = True)
-
-
-# to csv
-europe_hotel_reviews_df.to_csv("Cleaned Data/clean_europe_hotel_reviews")
-
 
 ################## worldwide travel cities ##################
 
@@ -54,7 +31,7 @@ worldwide_travel_cities_df["ideal_durations"] = worldwide_travel_cities_df["idea
 worldwide_travel_cities_df['avg_temp_monthly'] = worldwide_travel_cities_df["avg_temp_monthly"].apply(json.loads)
 
 # to csv
-worldwide_travel_cities_df.to_csv("Cleaned Data/clean_worldwide_travel_cities")
+worldwide_travel_cities_df.to_csv("Cleaned Data/clean_worldwide_travel_cities", index=False)
 
 ################## travel details ##################
 
@@ -126,7 +103,7 @@ merged_travel_details_df["Country"] = merged_travel_details_df["Country"].fillna
 merged_travel_details_df = merged_travel_details_df.drop(columns=["Trip ID", "Destination", "Traveler name", "country", "city_ascii", "Traveler nationality", "Traveler gender", "Traveler age", "Start date", "End date"])
 
 # to csv
-merged_travel_details_df.to_csv("Cleaned Data/clean_travel_details")
+merged_travel_details_df.to_csv("Cleaned Data/clean_travel_details", index=False)
 
 ################## travel destinations ##################
 
@@ -156,7 +133,7 @@ merged_travel_destinations_df = travel_destinations_df.merge(
 merged_travel_destinations_df = merged_travel_destinations_df.drop(columns=["city_ascii", "country"])
 
 # to csv
-merged_travel_destinations_df.to_csv("Cleaned Data/clean_travel_destinations")
+merged_travel_destinations_df.to_csv("Cleaned Data/clean_travel_destinations", index=False)
 
 ################## famous places ##################
 
@@ -205,7 +182,7 @@ merged_famous_places_df = famous_places_df.merge(
 merged_famous_places_df = merged_famous_places_df.drop(columns=["Annual_Visitors_Millions", "UNESCO_World_Heritage", "Year_Built", "Tourism_Revenue_Million_USD", "Average_Visit_Duration_Hours", "city_ascii", "country"])
 
 # to csv
-merged_famous_places_df.to_csv("Cleaned Data/clean_famous_places")
+merged_famous_places_df.to_csv("Cleaned Data/clean_famous_places", index=False)
 
 ################## european destinations ##################
 
@@ -227,8 +204,5 @@ euro_destination_df = euro_destination_df.drop(columns=["Region", "Best Time to 
 euro_destination_df = euro_destination_df.rename(columns={"Destination" : "City"})
 
 # to csv
-euro_destination_df.to_csv("Cleaned Data/clean_euro_destinations")
-
-
-
+euro_destination_df.to_csv("Cleaned Data/clean_euro_destinations", index=False)
 

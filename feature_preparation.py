@@ -15,6 +15,9 @@ numerical_features = ['culture', 'adventure', 'nature', 'beaches', 'nightlife', 
 X = merged_df[numerical_features].copy()
 print(f"Selected {len(numerical_features)} features")
 
+# cities not in the famous places data have no recorded attractions
+X['num_attractions'] = X['num_attractions'].fillna(0)
+
 # convert budget level to numeric
 budget_mapping = {'Budget' : 1, 'Mid-range': 2, 'Luxury': 3}
 X['budget_numeric'] = merged_df['budget_level'].map(budget_mapping)
@@ -40,6 +43,7 @@ print(X.head())
 
 # save features, feature names, and destinations
 np.save('X_features.npy', X.values)
-np.save('feature_columns.npy', X.columns.to_list)
+np.save('feature_columns.npy', X.columns.to_list())
 destinations = merged_df[['City', 'Country', 'lat', 'lng']]
 destinations.to_csv('destinations.csv', index = False)
+
