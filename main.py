@@ -2,10 +2,10 @@
 
 
 # import recommend function
-from recommender.stage1_recommender import recommend
+from recommender.keyword_recommender import recommend
 
 # get user input
-user_input = input("Where would you like to go and what do you want to do?")
+user_input = input("Where would you like to go and what do you want to do? ")
 
 # provide recommendations
 recs = recommend(user_input)
