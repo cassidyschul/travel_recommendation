@@ -12,5 +12,7 @@ recs = recommend(user_input)
 
 # display recommendations to user, displaying city, country and match score
 print("Top Recommendations:")
-print(recs[['City', 'Country', 'match_score']].to_string(index=False))
+print(recs[['City', 'Country', 'match_score', 'short_description']].to_string(index=False))
+
+
 

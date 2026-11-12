@@ -44,6 +44,6 @@ print(X.head())
 # save features, feature names, and destinations
 np.save('X_features.npy', X.values)
 np.save('feature_columns.npy', X.columns.to_list())
-destinations = merged_df[['City', 'Country', 'lat', 'lng']]
+destinations = merged_df[['City', 'Country', 'lat', 'lng', 'short_description']]
 destinations.to_csv('destinations.csv', index = False)
 

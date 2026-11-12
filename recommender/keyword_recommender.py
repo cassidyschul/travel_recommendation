@@ -71,3 +71,5 @@ def recommend(user_input, top_n=5):
     results = destinations.copy()
     results['match_score'] = scores
     return results.sort_values('match_score', ascending=False).head(top_n)
+    
+
