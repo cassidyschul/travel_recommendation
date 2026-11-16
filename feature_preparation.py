@@ -10,13 +10,11 @@ merged_df = pd.read_csv("Cleaned Data/merged_data.csv")
 print(f"Shape: {merged_df.shape}")
 
 # select numerical features 
-numerical_features = ['culture', 'adventure', 'nature', 'beaches', 'nightlife', 'cuisine', 'wellness', 'urban', 'seclusion', 'lat', 'lng', 'avg_trip_duration', 'avg_accommodation_cost', 'avg_transport_cost', 'avg_attraction_fee', 'num_attractions']
+numerical_features = ['culture', 'adventure', 'nature', 'beaches', 'nightlife', 'cuisine', 'wellness', 'urban', 'seclusion', 'lat', 'lng']
 
 X = merged_df[numerical_features].copy()
 print(f"Selected {len(numerical_features)} features")
 
-# cities not in the famous places data have no recorded attractions
-X['num_attractions'] = X['num_attractions'].fillna(0)
 
 # convert budget level to numeric
 budget_mapping = {'Budget' : 1, 'Mid-range': 2, 'Luxury': 3}
