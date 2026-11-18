@@ -43,7 +43,7 @@ merged_df = merged_df.merge(euro_destinations_df, on=["City", "Country"], how="l
 
 
 # drop columns
-merged_df = merged_df.drop(columns=['Category_y', 'Best_Month'])
+merged_df = merged_df.drop(columns=['Category_x', 'Category_y', 'Best_Month', 'Description'])
 
 # drop duplicates in merged_df
 merged_df = merged_df.drop_duplicates(subset=['City', 'Country'], keep='first')
