@@ -27,15 +27,15 @@ X_features = X[category_features].values
 
 # single words that signal each category
 keywords = {
-    'culture':   ['culture', 'history', 'historic', 'museum', 'museums', 'art', 'architecture'],
-    'adventure': ['adventure', 'hiking', 'hike', 'diving', 'climbing', 'outdoor', 'outdoors'],
-    'nature':    ['nature', 'mountain', 'mountains', 'forest', 'wildlife', 'scenic'],
-    'beaches':   ['beach', 'beaches', 'surf', 'island', 'islands', 'swim', 'coast'],
-    'nightlife': ['nightlife', 'party', 'bar', 'bars', 'club', 'clubs'],
-    'cuisine':   ['food', 'cuisine', 'restaurant', 'restaurants', 'eat', 'foodie', 'wine'],
-    'wellness':  ['wellness', 'spa', 'relax', 'relaxing', 'yoga', 'retreat'],
-    'urban':     ['city', 'urban', 'shopping'],
-    'seclusion': ['quiet', 'secluded', 'remote', 'peaceful'],
+    'culture':   ['culture', 'history', 'historic', 'museum', 'museums', 'art', 'architecture', 'scupltures', 'tours', 'history'],
+    'adventure': ['adventure', 'hiking', 'hike', 'diving', 'climbing', 'outdoor', 'outdoors', 'cliffs', 'explore'],
+    'nature':    ['nature', 'mountain', 'mountains', 'forest', 'wildlife', 'scenic', 'waterfall', 'jungle'],
+    'beaches':   ['beach', 'beaches', 'surf', 'island', 'islands', 'swim', 'coast', 'swimming', 'tan', 'sand', 'ocean', 'tropical', 'breeze'],
+    'nightlife': ['nightlife', 'party', 'bar', 'bars', 'club', 'clubs', 'beer', 'drinks', 'dancing', 'music'],
+    'cuisine':   ['food', 'cuisine', 'restaurant', 'restaurants', 'eat', 'foodie', 'wine', 'flavors'],
+    'wellness':  ['wellness', 'spa', 'relax', 'relaxing', 'yoga', 'retreat', 'meditation''restorative'],
+    'urban':     ['city', 'urban', 'shopping', 'shop', 'public transportation', 'crowded', 'skyscraper', 'bustling', 'markets'],
+    'seclusion': ['quiet', 'secluded', 'remote', 'peaceful', 'rural', 'tranquil']
 }
 
 
